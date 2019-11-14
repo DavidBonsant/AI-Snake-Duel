@@ -9,8 +9,7 @@ class Game:
     class Cell:
         # static variables for easy grouping of diffrent states
         EMPTY = []
-        P1 = []
-        P2 = []
+        PLAYER = [[],[]]
 
         def __init__(self, x, y):
             self.x = x
@@ -18,19 +17,26 @@ class Game:
             self.food = False
             # 0 is empty or food, or else there is a snake part here.
             self.age = 0
+            self.EMPTY.append(self)
+            # index to specify the player
+            self.player = 0
 
         def update(self):
             if self.age > 0:
                 self.age -= 1
+                if self.age == 0:
+                    self.PLAYER[self.player].remove(self)
+                    self.EMPTY.append(self)
 
-        def move(self, player1):
+        def move(self, player):
+            self.player = player.index
             self.age = player.age
-            EMPTY.remove(self)
-            P1.append(self)
+            self.EMPTY.remove(self)
+            self.PLAYER[self.player].append(self)
             if self.food:
                 self.food = False
                 player.age-=-1
-                for cell in P1:
+                for cell in self.PLAYER[self.player]:
                     cell.age-=-1
                 random.choice(EMPTY).food = True
 
@@ -46,7 +52,7 @@ class Game:
         self.h = height
         self.p1 = player1
         self.p2 = player2
-        self.board = [[Cell(i, j) for j in range(self.h)] for i in range(self.w)]
+        self.board = [[self.Cell(i, j) for j in range(self.h)] for i in range(self.w)]
 
     def update(self):
         for row in self.board:
@@ -64,8 +70,8 @@ class Game:
         self.board[self.p1.x][self.p1.y].move(self.p1)
         self.board[self.p2.x][self.p2.y].move(self.p2)
 
-    # Returns a 2d array with associated colours
-    def draw(self, bg, food, players, head1, head2):
+    # Returns a 2d array with associated colours, default is ASCII characters
+    def draw(self, bg='# ', food='@ ', players='O ', head1='A ', head2='B '):
         canvas = [[cell.draw(bg, food, players) for cell in row] for row in self.board]
         canvas[self.p1.x][self.p1.y] = head1
         canvas[self.p2.x][self.p2.y] = head2
