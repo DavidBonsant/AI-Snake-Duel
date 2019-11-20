@@ -5,6 +5,7 @@
 # Ce fichier contient la logique pour le jeu complet.
 import random
 
+
 class Game:
     class Cell:
         # static variables for easy grouping
