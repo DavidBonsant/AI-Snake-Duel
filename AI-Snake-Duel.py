@@ -10,7 +10,7 @@ from game import Player
 
 # Fichier à exécuter
 # Longeur maximale d'une partie
-MAX_LENGTH = 1000
+MAX_LENGTH = 100
 # Créer la partie
 size = 16
 test = Game.Game(size, size, Player.Player(0, 3, 3, size, size), Player.Player(1, 11, 11, size, size))
@@ -32,3 +32,5 @@ for i in range(MAX_LENGTH):
         # print on terminal
         sys.stdout.flush()
         time.sleep(0.1)
+
+print(test.get_winner())

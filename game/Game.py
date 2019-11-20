@@ -10,7 +10,8 @@ class Game:
     class Cell:
         # static variables for easy grouping
         EMPTY = []
-        PLAYER = [[],[]]
+        PLAYER = [[], []]
+        LAST_TO_PICKUP_APPLE = None
 
         def __init__(self, x, y):
             self.x = x
@@ -37,10 +38,11 @@ class Game:
                 self.PLAYER[self.player].append(self)
                 if self.food:
                     self.food = False
-                    player.age-=-1
+                    player.age -= -1
                     for cell in self.PLAYER[self.player]:
-                        cell.age-=-1
+                        cell.age -= -1
                     random.choice(self.EMPTY).food = True
+                    self.LAST_TO_PICKUP_APPLE = self.player
 
         # Returns the appropriate colour depending on the state
         def draw(self, bg, food, players):
@@ -65,7 +67,7 @@ class Game:
             print("P2 gagne!")
         elif self.p2.dead:
             self.done = True
-            print("p1 gagne!")
+            print("P1 gagne!")
         else:
             for row in self.board:
                 for cell in row:
@@ -88,3 +90,30 @@ class Game:
         canvas[self.p1.x][self.p1.y] = head1
         canvas[self.p2.x][self.p2.y] = head2
         return canvas
+
+    # Returns the winner of the game
+    def get_winner(self):
+        # If one of the players is dead, the other won
+        if self.p1.dead and not self.p2.dead:
+            return 2
+
+        if self.p2.dead and not self.p1.dead:
+            return 1
+
+        # If both are dead or none are, the longest snake won
+        if self.p1.age > self.p2.age:
+            return 1
+
+        if self.p2.age > self.p1.age:
+            return 2
+
+        # else return the last snake to pick an apple
+        lastPlayerToApple = self.board[0][0].LAST_TO_PICKUP_APPLE
+
+        if lastPlayerToApple == self.p1:
+            return 1
+
+        if lastPlayerToApple == self.p2:
+            return 2
+
+        return 0
