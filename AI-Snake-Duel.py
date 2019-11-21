@@ -32,5 +32,3 @@ for i in range(MAX_LENGTH):
         # print on terminal
         sys.stdout.flush()
         time.sleep(0.1)
-
-print(test.get_winner())
