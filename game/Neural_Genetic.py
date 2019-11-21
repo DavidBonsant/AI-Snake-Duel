@@ -22,7 +22,7 @@ def randomize_matrix(matrix, a, b):
 
 
 class NN:
-    def __init__(self, number_hidden):
+    def __init__(self, number_hidden=10):
         self.number_input = 7
         self.number_hidden = number_hidden
         self.number_output = 3

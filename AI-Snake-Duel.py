@@ -8,6 +8,8 @@ import sys
 from game import Game
 from game import Player
 
+from ai_gui import GameRenderer
+
 # Fichier à exécuter
 # Longeur maximale d'une partie
 MAX_LENGTH = 100
@@ -16,7 +18,10 @@ size = 16
 test = Game.Game(size, size, Player.Player(0, 3, 3, size, size), Player.Player(1, 11, 11, size, size))
 
 print("Game start!")
+g = GameRenderer(test)
+g.render(MAX_LENGTH)
 
+'''
 for i in range(MAX_LENGTH):
     test.update()
 
@@ -32,5 +37,5 @@ for i in range(MAX_LENGTH):
             print(''.join(line))
         # print on terminal
         sys.stdout.flush()
-        time.sleep(0.1)
+        time.sleep(0.1)'''
 
