@@ -84,6 +84,9 @@ class Game:
                 self.p1.die()
             if self.board[self.p2.x][self.p2.y].age > 0:
                 self.p2.die()
+            if self.p1.x == self.p2.x and self.p1.y == self.p2.y:
+                self.p1.die()
+                self.p2.die()
 
             self.board[self.p1.x][self.p1.y].move(self.p1)
             self.board[self.p2.x][self.p2.y].move(self.p2)
@@ -136,7 +139,7 @@ class Game:
         return 10
 
     # Returns a 2d array with associated colours, default is ASCII characters
-    def draw(self, bg='# ', food='@ ', players='O ', head1='A ', head2='B '):
+    def draw(self, bg='#', food='@', players='O', head1='A', head2='B'):
         canvas = [[cell.draw(bg, food, players) for cell in row] for row in self.board]
         canvas[self.p1.x][self.p1.y] = head1
         canvas[self.p2.x][self.p2.y] = head2
