@@ -8,7 +8,7 @@ POP_SIZE = 8
 MUTATION_RATE = 0.1
 CROSSOVER_RATE = 0.8
 
-NUMBER_OF_HIDDEN_LAYERS = 4
+NUMBER_OF_HIDDEN_LAYERS = 10
 
 
 def sigmoid(x):
@@ -66,6 +66,12 @@ class NN:
                 if random.randint(0, 1) == 1:
                     self.wi[y][x] = other_nn.wi[y][x]
 
+    def mutate2(self):
+        for y in range(len(self.wi)):
+            for x in range(len(self.wi[y])):
+                if random.randint(0, 1) == 1:
+                    self.wi[y][x] += random.uniform(0.0, 1.0)
+
 
 n = NN(NUMBER_OF_HIDDEN_LAYERS)
 n2 = NN(NUMBER_OF_HIDDEN_LAYERS)
@@ -73,6 +79,8 @@ print(n.update())
 print(n2.update())
 
 n.mutate(n2)
+n2.mutate(n)
 
 print(n.update())
+print(n2.update())
 

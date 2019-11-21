@@ -69,12 +69,16 @@ class Game:
             self.done = True
             print("P1 gagne!")
         else:
-            for row in self.board:
-                for cell in row:
-                    cell.update()
+            food_position = [0, 0]
 
-            self.p1.update()
-            self.p2.update()
+            # Update cells and store current position of food
+            for x, row in enumerate(self.board):
+                for y, cell in enumerate(row):
+                    cell.update()
+                    if cell.food:
+                        food_position = [x, y]
+
+            self.update_players(food_position)
 
             if self.board[self.p1.x][self.p1.y].age > 0:
                 self.p1.die()
@@ -83,6 +87,53 @@ class Game:
 
             self.board[self.p1.x][self.p1.y].move(self.p1)
             self.board[self.p2.x][self.p2.y].move(self.p2)
+
+    def update_players(self, food_position):
+        p1_forward = self.get_distance_to_next_wall(self.p1)
+        p2_forward = self.get_distance_to_next_wall(self.p2)
+
+        p1_left = self.get_distance_to_next_wall(self.p1, -1)
+        p2_left = self.get_distance_to_next_wall(self.p2, -1)
+
+        p1_right = self.get_distance_to_next_wall(self.p1, 1)
+        p2_right = self.get_distance_to_next_wall(self.p2, 1)
+
+        p1_food_x = self.p1.x - food_position[0]
+        p2_food_x = self.p1.x - food_position[0]
+
+        p1_food_y = self.p1.y - food_position[1]
+        p2_food_y = self.p1.y - food_position[1]
+
+        p1_enemy_x = self.p1.x - self.p2.x
+        p2_enemy_x = self.p2.x - self.p1.x
+
+        p1_enemy_y = self.p1.y - self.p2.y
+        p2_enemy_y = self.p2.y - self.p1.y
+
+        self.p1.update(p1_forward, p1_left, p1_right, p1_food_x, p1_food_y, p1_enemy_x, p1_enemy_y)
+        self.p1.update(p2_forward, p2_left, p2_right, p2_food_x, p2_food_y, p2_enemy_x, p2_enemy_y)
+
+    def get_distance_to_next_wall(self, player, direction=0):
+        temp_distance = 0
+        forward_position = [player.x, player.y]
+        player_movement = [player.movement[0], player.movement[1]]
+
+        if direction < 0:
+            player_movement = [-player_movement[1], player_movement[0]]
+        elif direction > 0:
+            player_movement = [player_movement[1], -player_movement[0]]
+
+        while temp_distance < 10:
+            forward_position[0] += player_movement[0]
+            forward_position[1] += player_movement[0]
+            forward_position[0] %= self.w
+            forward_position[1] %= self.h
+            temp_distance += 1
+
+            if self.board[player.x][player.y].age > 0:
+                return temp_distance
+
+        return 10
 
     # Returns a 2d array with associated colours, default is ASCII characters
     def draw(self, bg='# ', food='@ ', players='O ', head1='A ', head2='B '):
@@ -108,12 +159,12 @@ class Game:
             return 2
 
         # else return the last snake to pick an apple
-        lastPlayerToApple = self.board[0][0].LAST_TO_PICKUP_APPLE
+        last_player_to_apple = self.board[0][0].LAST_TO_PICKUP_APPLE
 
-        if lastPlayerToApple == self.p1:
+        if last_player_to_apple == self.p1:
             return 1
 
-        if lastPlayerToApple == self.p2:
+        if last_player_to_apple == self.p2:
             return 2
 
         return 0

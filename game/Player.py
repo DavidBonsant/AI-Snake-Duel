@@ -2,7 +2,7 @@
 # David Bonsant
 # Jérémie Beaudoin-Dion
 
-from game import DecisionMaker
+from game import BasicAI
 
 
 # Ce fichier est l'objet de base pour un joueur
@@ -28,10 +28,10 @@ class Player:
         self.ai = decision_maker
 
         if decision_maker is None:
-            self.ai = DecisionMaker.BasicAI()
+            self.ai = BasicAI.BasicAI()
 
-    def update(self, forward=0, left=0, right=0, foodAngle=0, ennemyAngle=0):
-        self.move(self.ai.update(forward, left, right, foodAngle, ennemyAngle))
+    def update(self, forward=0, left=0, right=0, pomme_x=0, pomme_y=0, enemy_x=0, enemy_y=0):
+        self.move(self.ai.update(forward, left, right, pomme_x, pomme_y, enemy_x, enemy_y))
 
     def move(self, direction):
         # Si direction = 0, pas de rotation, sinon rotation de 90 degrés
