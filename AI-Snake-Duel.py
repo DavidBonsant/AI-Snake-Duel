@@ -20,6 +20,8 @@ test = Game.Game(size, size, Player.Player(0, 3, 3, size, size), Player.Player(1
 print("Game start!")
 g = GameRenderer(test)
 g.render(MAX_LENGTH)
+print("Winner: " + str(test.get_winner()))
+
 
 def run_game_without_gui():
     for i in range(MAX_LENGTH):
