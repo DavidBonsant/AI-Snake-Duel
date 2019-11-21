@@ -111,7 +111,7 @@ class Game:
         p2_enemy_y = self.p2.y - self.p1.y
 
         self.p1.update(p1_forward, p1_left, p1_right, p1_food_x, p1_food_y, p1_enemy_x, p1_enemy_y)
-        self.p1.update(p2_forward, p2_left, p2_right, p2_food_x, p2_food_y, p2_enemy_x, p2_enemy_y)
+        self.p2.update(p2_forward, p2_left, p2_right, p2_food_x, p2_food_y, p2_enemy_x, p2_enemy_y)
 
     def get_distance_to_next_wall(self, player, direction=0):
         temp_distance = 0

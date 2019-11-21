@@ -19,6 +19,7 @@ print("Game start!")
 
 for i in range(MAX_LENGTH):
     test.update()
+
     if test.done:
         break
     else:
@@ -26,9 +27,10 @@ for i in range(MAX_LENGTH):
         canvas = test.draw()
         if i > 0:
             # Effacer la grille
-            print("\33[" + str(len(canvas)+1) + "A")
+            print("\33[" + str(len(canvas) + 1) + "A")
         for line in canvas:
             print(''.join(line))
         # print on terminal
         sys.stdout.flush()
         time.sleep(0.1)
+
