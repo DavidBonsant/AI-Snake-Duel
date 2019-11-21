@@ -19,7 +19,7 @@ class GameRenderer:
 
         self.layout.append([SimpleGui.Button('Start')])
 
-    def render(self, max_length, sleep_value=0.05):
+    def render(self, max_length):
         # Create the Window
         window = SimpleGui.Window('Window Title', self.layout)
         # Event Loop to process "events" and get the "values" of the inputs
@@ -40,6 +40,9 @@ class GameRenderer:
                     if '@' in cell:
                         curr_color = 'green'
 
+                    if 'O' in cell:
+                        curr_color = 'grey'
+
                     if 'A' in cell:
                         curr_color = 'blue'
 
@@ -49,6 +52,6 @@ class GameRenderer:
                     window[str(x * 100) + str(y)].update(cell, text_color=curr_color)
 
             window.Refresh()
-            time.sleep(sleep_value)
+            # time.sleep(sleep_value)
 
         window.close()
