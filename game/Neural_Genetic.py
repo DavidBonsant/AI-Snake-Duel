@@ -71,16 +71,3 @@ class NN:
             for x in range(len(self.wi[y])):
                 if random.randint(0, 1) == 1:
                     self.wi[y][x] += random.uniform(0.0, 1.0)
-
-
-n = NN(NUMBER_OF_HIDDEN_LAYERS)
-n2 = NN(NUMBER_OF_HIDDEN_LAYERS)
-print(n.update())
-print(n2.update())
-
-n.mutate(n2)
-n2.mutate(n)
-
-print(n.update())
-print(n2.update())
-
