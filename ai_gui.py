@@ -21,7 +21,7 @@ class GameRenderer:
 
     def render(self, max_length):
         # Create the Window
-        window = SimpleGui.Window('Window Title', self.layout)
+        window = SimpleGui.Window('Snake Battle', self.layout)
         # Event Loop to process "events" and get the "values" of the inputs
         window.Read()
 
