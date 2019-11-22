@@ -107,4 +107,4 @@ def train_algorithm():
     pickle.dump(last_tourney.get_best(), open("best_nn_gen.p", "wb"))
 
 
-train_algorithm()
+train_algorithm()  # Note: Games are not long enough. Too many generations.
