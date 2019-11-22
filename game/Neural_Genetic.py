@@ -2,12 +2,6 @@ import math
 import random
 import numpy as np
 
-
-MAX_ITERATION = 4000
-POP_SIZE = 8
-MUTATION_RATE = 0.1
-CROSSOVER_RATE = 0.8
-
 NUMBER_OF_HIDDEN_LAYERS = 10
 
 

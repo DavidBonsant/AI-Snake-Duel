@@ -41,3 +41,4 @@ def run_game_without_gui():
             sys.stdout.flush()
             time.sleep(0.1)
 
+favorite_color = pickle.load( open( "save.p", "rb" ) )

@@ -61,13 +61,13 @@ class Game:
     def update(self):
         if self.p1.dead and self.p2.dead:
             self.done = True
-            print("Égalitée!")
+            # print("Égalitée!")
         elif self.p1.dead:
             self.done = True
-            print("P2 gagne!")
+            # print("P2 gagne!")
         elif self.p2.dead:
             self.done = True
-            print("P1 gagne!")
+            # print("P1 gagne!")
         else:
             food_position = [0, 0]
 
