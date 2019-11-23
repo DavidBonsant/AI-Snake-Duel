@@ -32,24 +32,9 @@ class GameRenderer:
                 window.close()
                 return False
 
-            for x, row in enumerate(self.game.draw()):
+            for x, row in enumerate(self.game.draw(bg='white', food='green', players='grey', head1='blue', head2='purple')):
                 for y, cell in enumerate(row):
-                    curr_color = 'white'
-
-                    # bg='# ', food='@ ', players='O ', head1='A ', head2='B '
-                    if '@' in cell:
-                        curr_color = 'green'
-
-                    if 'O' in cell:
-                        curr_color = 'grey'
-
-                    if 'A' in cell:
-                        curr_color = 'blue'
-
-                    if 'B' in cell:
-                        curr_color = 'purple'
-
-                    window[str(x * 100) + str(y)].update(cell, text_color=curr_color)
+                    window[str(x * 100) + str(y)].update(cell, text_color=cell)
 
             window.Refresh()
             # time.sleep(sleep_value)
