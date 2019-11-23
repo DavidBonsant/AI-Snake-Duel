@@ -34,7 +34,7 @@ class GameRenderer:
 
             for x, row in enumerate(self.game.draw(bg='white', food='green', players='grey', head1='blue', head2='purple')):
                 for y, cell in enumerate(row):
-                    window[str(x * 100) + str(y)].update(cell, text_color=cell)
+                    window[str(x * 100) + str(y)].update('█', text_color=cell)
 
             window.Refresh()
             # time.sleep(sleep_value)
