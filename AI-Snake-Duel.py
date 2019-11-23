@@ -41,4 +41,5 @@ def run_game_without_gui():
             sys.stdout.flush()
             time.sleep(0.1)
 
-favorite_color = pickle.load( open( "save.p", "rb" ) )
+# Exemple de comment ouvrir un AI
+# ai = pickle.load(open("ai/AI_NAME.p", "rb"))
