@@ -128,12 +128,12 @@ class Game:
 
         while temp_distance < 10:
             forward_position[0] += player_movement[0]
-            forward_position[1] += player_movement[0]
+            forward_position[1] += player_movement[1]
             forward_position[0] %= self.w
             forward_position[1] %= self.h
             temp_distance += 1
 
-            if self.board[player.x][player.y].age > 0:
+            if self.board[forward_position[0]][forward_position[1]].age > 0:
                 return temp_distance
 
         return 10

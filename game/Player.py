@@ -15,13 +15,13 @@ from game import BasicAI
 #       decision_maker: l'algorithme qui décide de la prochaine direction à prendre
 #           cet algorithme doit contenir une fonction update() qui retourne 0, 1 ou -1 selon la décision
 class Player:
-    def __init__(self, index, x, y, width, length, age=5, decision_maker=None):
+    def __init__(self, index, x, y, width, length, age=5, decision_maker=None, movement=[1, 0]):
         self.dead = False
         self.index = index
         self.x = x
         self.y = y
         # Vecteur pour la direction
-        self.movement = [1, 0]
+        self.movement = movement
         self.width = width
         self.length = length
         self.age = age
