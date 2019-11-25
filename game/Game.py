@@ -111,18 +111,18 @@ class Game:
         # function to avoid writing long equation multiple times
         # player is the player , x and y are the actual positions on the grid
         # 1 and -1 are squared when only the absolute value is needed
-        def relativePos(player, x, y):
+        def relativePos(player, x, y, game):
             mx = player.movement[0]
             my = player.movement[1]
-            return_x = ((x * mx + y * my) - player.x) % (self.width * mx ** 2 + self.height * my ** 2)
-            return_y = ((y * mx + x * my) - player.y) % (self.width * my ** 2 + self.height * mx ** 2)
+            return_x = ((x * mx + y * my) - player.x) % (game.width * mx ** 2 + game.height * my ** 2)
+            return_y = ((y * mx + x * my) - player.y) % (game.width * my ** 2 + game.height * mx ** 2)
             return return_x, return_y 
 
-        p1_food_x, p1_food_y = relativePos(self.p1, food_position[0], food_position[1])
-        p2_food_x, p2_food_y = relativePos(self.p2, food_position[0], food_position[1])
+        p1_food_x, p1_food_y = relativePos(self.p1, food_position[0], food_position[1], self)
+        p2_food_x, p2_food_y = relativePos(self.p2, food_position[0], food_position[1], self)
 
-        p1_enemy_x, p1_enemy_y = relativePos(self.p1, self.p2.x, self.p2.y)
-        p2_enemy_x, p2_enemy_y = relativePos(self.p2, self.p1.x, self.p1.y)
+        p1_enemy_x, p1_enemy_y = relativePos(self.p1, self.p2.x, self.p2.y, self)
+        p2_enemy_x, p2_enemy_y = relativePos(self.p2, self.p1.x, self.p1.y, self)
 
         self.p1.update(p1_forward, p1_left, p1_right, p1_food_x, p1_food_y, p1_enemy_x, p1_enemy_y)
         self.p2.update(p2_forward, p2_left, p2_right, p2_food_x, p2_food_y, p2_enemy_x, p2_enemy_y)
