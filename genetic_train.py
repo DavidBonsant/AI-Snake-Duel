@@ -71,7 +71,7 @@ class Tournament:
                 if outcome == 2:
                     values[j] += 1
 
-        self.population = [x for (y, x) in sorted(zip(values, self.population), key=lambda pair: pair[0])]
+        self.population = [x for (y, x) in sorted(zip(values, self.population), key=lambda pair: pair[0], reverse=True)]
 
     def do_game(self, agent1, agent2):
         g = Game.Game(GAME_SIZE, GAME_SIZE,
