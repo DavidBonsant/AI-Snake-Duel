@@ -17,7 +17,8 @@ GAME_SIZE = 16
 
 
 class Tournament:
-    def __init__(self, population=None, pop_size=8, initial_game_length=10, game_length_step=10, max_game_length=300, num_gen=100):
+    def __init__(self, population=None, pop_size=8, initial_game_length=10, game_length_step=10,
+                 max_game_length=1000, num_gen=100):
         self.population = population
 
         if self.population is None:
@@ -58,18 +59,20 @@ class Tournament:
                 self.game_length += self.game_length_step
 
     # Every agent playes againts each other and are ordered by number of games won
+    # Agents play 2 times: Once as A, once as B
     def do_tournament(self):
         values = [0 for i in range(len(self.population))]
 
         for i in range(len(self.population)):
-            for j in range(i+1, len(self.population)):
-                outcome = self.do_game(self.population[i], self.population[j])
+            for j in range(0, len(self.population)):
+                if i != j:
+                    outcome = self.do_game(self.population[i], self.population[j])
 
-                if outcome == 1:
-                    values[i] += 1
+                    if outcome == 1:
+                        values[i] += 1
 
-                if outcome == 2:
-                    values[j] += 1
+                    if outcome == 2:
+                        values[j] += 1
 
         self.population = [x for (y, x) in sorted(zip(values, self.population), key=lambda pair: pair[0], reverse=True)]
 
