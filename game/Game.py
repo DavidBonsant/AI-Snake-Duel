@@ -91,6 +91,13 @@ class Game:
             self.board[self.p1.x][self.p1.y].move(self.p1)
             self.board[self.p2.x][self.p2.y].move(self.p2)
 
+    # Les données sont données de la perspective du serpent
+    # Par défaut le serpent se dirige dans la direction [1, 0].
+    # Cette direction est la direction "à l'endroit"
+    # Toutes les valeurs de distance sont données %width, %height, elles sont donc positives
+    # Lorsque le serpent vas dans la direction [-1, 0], les valeurs sont inversés.
+    # Lorsque le serpent vas dans la direction [0, 1], x et y sont inversés
+
     def update_players(self, food_position):
         p1_forward = self.get_distance_to_next_wall(self.p1)
         p2_forward = self.get_distance_to_next_wall(self.p2)
@@ -101,17 +108,21 @@ class Game:
         p1_right = self.get_distance_to_next_wall(self.p1, 1)
         p2_right = self.get_distance_to_next_wall(self.p2, 1)
 
-        p1_food_x = self.p1.x - food_position[0]
-        p2_food_x = self.p1.x - food_position[0]
+        # function to avoid writing long equation multiple times
+        # player is the player , x and y are the actual positions on the grid
+        # 1 and -1 are squared when only the absolute value is needed
+        def relativePos(player, x, y):
+            mx = player.movement[0]
+            my = player.movement[1]
+            return_x = ((x * mx + y * my) - player.x) % (self.width * mx ** 2 + self.height * my ** 2)
+            return_y = ((y * mx + x * my) - player.y) % (self.width * my ** 2 + self.height * mx ** 2)
+            return return_x, return_y 
 
-        p1_food_y = self.p1.y - food_position[1]
-        p2_food_y = self.p1.y - food_position[1]
+        p1_food_x, p1_food_y = relativePos(self.p1, food_position[0], food_position[1])
+        p2_food_x, p2_food_y = relativePos(self.p2, food_position[0], food_position[1])
 
-        p1_enemy_x = self.p1.x - self.p2.x
-        p2_enemy_x = self.p2.x - self.p1.x
-
-        p1_enemy_y = self.p1.y - self.p2.y
-        p2_enemy_y = self.p2.y - self.p1.y
+        p1_enemy_x, p1_enemy_y = relativePos(self.p1, self.p2.x, self.p2.y)
+        p2_enemy_x, p2_enemy_y = relativePos(self.p2, self.p1.x, self.p1.y)
 
         self.p1.update(p1_forward, p1_left, p1_right, p1_food_x, p1_food_y, p1_enemy_x, p1_enemy_y)
         self.p2.update(p2_forward, p2_left, p2_right, p2_food_x, p2_food_y, p2_enemy_x, p2_enemy_y)
