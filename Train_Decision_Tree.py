@@ -11,21 +11,25 @@ from game import Game
 from game import Player
 from game import Decision_Tree_Genetic
 
-POPULATION_SIZE = 16
+POPULATION_SIZE = 128
 GAME_LENGTH = 100
-NUM_GENERATIONS = 20
-NUM_TOURNAMENTS = 50
+NUM_GENERATIONS = 50
+NUM_TOURNAMENTS = 20
 GAME_SIZE = 16
 
 
 class Tournament:
-    def __init__(self, population=None, pop_size=8, initial_game_length=10, game_length_step=10, max_game_length=300, num_gen=100):
+    def __init__(self, best = None, population=None, pop_size=8, initial_game_length=10, game_length_step=10, max_game_length=300, num_gen=100):
         self.population = population
 
         if self.population is None:
             self.population = []
             for i in range(pop_size):
                 self.population.append(Decision_Tree_Genetic.Decision_Tree())
+
+        self.best = best     
+        if self.best is None:
+            self.best = Decision_Tree_Genetic.Decision_Tree()
 
         self.game_length = initial_game_length
         self.game_length_step = game_length_step
@@ -68,23 +72,12 @@ class Tournament:
         values = [0 for i in range(len(self.population))]
 
         for i in range(len(self.population)):
-            # also do a game against random to promote non-suicide wins
-            if self.do_game(self.population[i], None) == 1:
+            outcome = self.do_game(self.population[i], self.best)
+            if outcome == 1:
+                values[i] += 2
+            elif outcome == 0:
                 values[i] += 1
 
-            for j in range(i+1, len(self.population)):
-                outcome = self.do_game(self.population[i], self.population[j])
-
-                if outcome == 1:
-                    values[i] += 2
-
-                if outcome == 2:
-                    values[j] += 2
-
-                if outcome == 0:
-                    values[i] += 1
-                    values[j] += 1
-        print("highest score:", max(values))
         self.population = [x for (y, x) in sorted(zip(values, self.population), key=lambda pair: pair[0], reverse=True)]
 
     def do_game(self, agent1, agent2):
@@ -108,10 +101,13 @@ class Tournament:
 
 def train_algorithm():
     tourneys = []
+    best = None
 
     for i in range(NUM_TOURNAMENTS):
-        tourney = Tournament(pop_size=POPULATION_SIZE, initial_game_length=min(5+i*NUM_GENERATIONS*1, GAME_LENGTH), game_length_step=1, max_game_length=GAME_LENGTH, num_gen=NUM_GENERATIONS)
+        tourney = Tournament(best=best, pop_size=POPULATION_SIZE, initial_game_length=min(5+i*NUM_GENERATIONS*1, GAME_LENGTH), game_length_step=1, max_game_length=GAME_LENGTH, num_gen=NUM_GENERATIONS)
         tourney.train()
+        best = tourney.population[0]
         pickle.dump(tourney.get_best(), open("ai/best_decision_tree" + str(i) + ".p", "wb"))
+        print("Ronde", i, "enregistrée")
 
 train_algorithm()

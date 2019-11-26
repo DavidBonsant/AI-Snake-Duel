@@ -4,13 +4,11 @@
 
 import random
 
+# Éventuellement changer la location de cette variable
 BOARD_SIZE = 16
 
 class Decision_Tree:
     class Node:
-        # Static variable for input ranges
-        INPUT_RANGES = [[0,BOARD_SIZE],[0,BOARD_SIZE],[0,BOARD_SIZE],[1-BOARD_SIZE,BOARD_SIZE],[1-BOARD_SIZE,BOARD_SIZE],[1-BOARD_SIZE,BOARD_SIZE],[1-BOARD_SIZE,BOARD_SIZE], [1-BOARD_SIZE,BOARD_SIZE]]
-
         # index is index for param array
         # child is default child (can be node or leaf value)
         def __init__(self, index, child, parent=None):
@@ -31,7 +29,7 @@ class Decision_Tree:
         # Add a new node with random weight(if not already there)
         def add(self, node):
             # if new random branch value already exist, ignore the add. 
-            val = random.randrange(self.INPUT_RANGES[self.index][0], self.INPUT_RANGES[self.index][1])
+            val = random.randrange(0, BOARD_SIZE)
             if node not in self.children and val not in self.branching:
                 self.branching.append(val)
                 self.branching.sort()
@@ -68,7 +66,7 @@ class Decision_Tree:
 
         # shuffle one random value of branch and reorder the array.
         def adjust(self, recursive=False):
-            val = random.randrange(self.INPUT_RANGES[self.index][0], self.INPUT_RANGES[self.index][1])
+            val = random.randrange(0, BOARD_SIZE)
             if val not in self.branching and len(self.branching) > 0:
                 self.branching[random.randrange(len(self.branching))] = val
                 self.branching.sort()
