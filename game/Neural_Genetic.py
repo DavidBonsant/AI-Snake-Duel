@@ -54,14 +54,14 @@ class NN:
 
         return 1
 
-    def mutate(self, other_nn):
+    def mutate(self, other_nn, rate):
         for y in range(len(self.wi)):
             for x in range(len(self.wi[y])):
-                if random.randint(0, 1) == 1:
+                if random.randint(0, rate+2) == 1:
                     self.wi[y][x] = other_nn.wi[y][x]
 
-    def mutate2(self):
+    def mutate2(self, rate):
         for y in range(len(self.wi)):
             for x in range(len(self.wi[y])):
-                if random.randint(0, 1) == 1:
+                if random.randint(0, rate+2) == 1:
                     self.wi[y][x] += random.uniform(0.0, 1.0)

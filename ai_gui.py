@@ -37,6 +37,6 @@ class GameRenderer:
                     window[str(x * 100) + str(y)].update('█', text_color=cell)
 
             window.Refresh()
-            # time.sleep(sleep_value)
+            time.sleep(0.1)
 
         window.close()

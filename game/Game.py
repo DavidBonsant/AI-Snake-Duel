@@ -58,6 +58,9 @@ class Game:
         # Place a piece of food
         random.choice(self.Cell.EMPTY).food = True
 
+        self.player_1_score = Score()
+        self.player_2_score = Score()
+
     def update(self):
         if self.p1.dead and self.p2.dead:
             self.done = True
@@ -79,6 +82,8 @@ class Game:
                         food_position = [x, y]
 
             self.update_players(food_position)
+            self.player_1_score.update(food_position, [self.p1.x, self.p1.y])
+            self.player_2_score.update(food_position, [self.p2.x, self.p2.y])
 
             if self.board[self.p1.x][self.p1.y].age > 0:
                 self.p1.die()
@@ -179,3 +184,38 @@ class Game:
             return 2
 
         return 0
+
+    def get_score(self, player_num):
+        if player_num == 1:
+            self.player_1_score.finalize(self.p1)
+            return self.player_1_score.score
+        else:
+            self.player_2_score.finalize(self.p2)
+            return self.player_2_score.score
+
+
+class Score:
+    def __init__(self):
+        self.score = 0
+        self.last_dist = 0
+
+    def update(self, pomme_pos, player_pos):
+        new_dist = (pomme_pos[0] - player_pos[0])**2 + (pomme_pos[1] - player_pos[1])**2
+
+        if self.last_dist != 0:
+            # Lose 1.5 points when going away from apple
+            if new_dist > self.last_dist:
+                self.score -= 1.5
+            else:
+                # Gains 1 point when going towards the apple
+                self.score += 1
+
+        self.last_dist = new_dist
+
+    def finalize(self, player):
+        # wins 10 points per age minus start age
+        self.score += (player.age - 5) * 10
+
+        # Looses 50 points if the player died.
+        if player.dead:
+            self.score -= 50
