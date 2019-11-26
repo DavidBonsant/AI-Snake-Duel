@@ -20,9 +20,40 @@ NUM_TOURNAMENTS = 8
 GAME_SIZE = 16
 
 
+class ScoringSystem:
+    def __init__(self, points_forward_apple=1, points_backwards_apple=-3, points_collect_apple=20, points_win=50):
+        self.score = 0
+        self.last_dist = 0
+        self.points_forward_apple = points_forward_apple
+        self.points_backwards_apple = points_backwards_apple
+        self.points_collect_apple = points_collect_apple
+        self.points_win = points_win
+
+    def update(self, pomme_pos, player_pos):
+        new_dist = (pomme_pos[0] - player_pos[0])**2 + (pomme_pos[1] - player_pos[1])**2
+
+        if self.last_dist != 0:
+            # Lose X points when going away from apple
+            if new_dist > self.last_dist:
+                self.score += self.points_backwards_apple
+            else:
+                # Gains Y point when going towards the apple
+                self.score += self.points_forward_apple
+
+        self.last_dist = new_dist
+
+    def finalize(self, player, won):
+        # wins 20 points per apple collected
+        self.score += (player.age - 5) * self.points_collect_apple
+
+        # Looses 50 points if the player lost.
+        if won:
+            self.score += self.points_win
+
+
 class Tournament:
     def __init__(self, agent_class, population=None, pop_size=50, initial_game_length=20, game_length_step=5,
-                 max_game_length=200, num_gen=100):
+                 max_game_length=200, num_gen=100, scoring_system=ScoringSystem):
         self.population = population
 
         if self.population is None:
@@ -38,6 +69,7 @@ class Tournament:
         self.all_training_ai = [BasicAI.AfraidAI(), BasicAI.RandomAI(), BasicAI.ImmobileAI(), BasicAI.CirlceAI()]
 
         self.mean_values = []
+        self.scoring_system = scoring_system
 
     def train(self):
         for epoch in range(self.num_gen):
@@ -112,7 +144,8 @@ class Tournament:
     def do_game(self, agent1, agent2):
         g = Game.Game(GAME_SIZE, GAME_SIZE,
                       Player.Player(0, 3, 3, GAME_SIZE, GAME_SIZE, decision_maker=agent1),
-                      Player.Player(1, 11, 11, GAME_SIZE, GAME_SIZE, decision_maker=agent2))
+                      Player.Player(1, 11, 11, GAME_SIZE, GAME_SIZE, decision_maker=agent2),
+                      scoring_system=self.scoring_system)
 
         for i in range(self.game_length):
             g.update()
@@ -136,7 +169,7 @@ def train_algorithm(algorithm):
     for i in range(8):
         print("Starting tournament: " + str(i + 1))
         tourneys.append(Tournament(algorithm, pop_size=50, initial_game_length=20, game_length_step=5,
-                                   max_game_length=200, num_gen=100))
+                                   max_game_length=200, num_gen=100, scoring_system=ScoringSystem))
         tourneys[i].train()
         pickle.dump(tourneys[i].get_best(), open(str(algorithm.__name__) + "/best_gen_tourney_" + str(i) + ".p", "wb"))
 

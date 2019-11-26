@@ -48,7 +48,7 @@ class Game:
         def draw(self, bg, food, players):
             return players if self.age > 0 else food if self.food else bg
 
-    def __init__(self, width, height, player1, player2):
+    def __init__(self, width, height, player1, player2, scoring_system=None):
         self.done = False
         self.w = width
         self.h = height
@@ -58,8 +58,12 @@ class Game:
         # Place a piece of food
         random.choice(self.Cell.EMPTY).food = True
 
-        self.player_1_score = Score()
-        self.player_2_score = Score()
+        if scoring_system is None:
+            self.player_1_score = Score()
+            self.player_2_score = Score()
+        else:
+            self.player_1_score = scoring_system()
+            self.player_2_score = scoring_system()
 
     def update(self):
         if self.p1.dead and self.p2.dead:
