@@ -39,8 +39,6 @@ class Player:
             self.movement = [-self.movement[1], self.movement[0]]
         elif direction > 0:
             self.movement = [self.movement[1], -self.movement[0]]
-        else:
-            self.tic_since_last_move += 1
 
     def update(self, forward=0, left=0, right=0, pomme_x=0, pomme_y=0, enemy_x=0, enemy_y=0):
         self.move(self.ai.update(forward, left, right, pomme_x, pomme_y, enemy_x, enemy_y))
@@ -49,8 +47,12 @@ class Player:
         # Si direction = 0, pas de rotation, sinon rotation de 90 degrés
         if direction < 0:
             self.movement = [-self.movement[1], self.movement[0]]
+            self.tic_since_last_move = 0
         elif direction > 0:
             self.movement = [self.movement[1], -self.movement[0]]
+            self.tic_since_last_move = 0
+        else:
+            self.tic_since_last_move += 1
         # moving logic
         self.x += self.movement[0]
         self.y += self.movement[1]
@@ -60,12 +62,4 @@ class Player:
 
     def die(self):
         self.dead = True
-
-
-class Score:
-    def __init__(self):
-        pass
-
-    def update(self, pomme_x, pomme_y, direction):
-        pass
 

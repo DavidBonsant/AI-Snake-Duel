@@ -32,6 +32,8 @@ class NN:
         randomize_matrix(self.wi, -2.0, 2.0)
         randomize_matrix(self.wo, -2.0, 2.0)
 
+        self.mutation_rate = 2
+
     def run(self, inputs):
         if len(inputs) != self.number_input:
             print('incorrect number of inputs')
@@ -58,7 +60,7 @@ class NN:
 
         return 1
 
-    def mutate(self, other_nn, rate):
+    def cross(self, other_nn, rate):
         for y in range(len(self.wi)):
             for x in range(len(self.wi[y])):
                 if random.randint(0, rate+1) == 1:
@@ -69,15 +71,19 @@ class NN:
                 if random.randint(0, rate+1) == 1:
                     self.wo[y][x] = other_nn.wo[y][x]
 
-    def mutate2(self, rate):
+    def set_mutation_rate(self, rate):
+        self.mutation_rate = rate
+
+    def mutate1(self):
         for y in range(len(self.wi)):
             for x in range(len(self.wi[y])):
-                if random.randint(0, rate+1) == 1:
+                if random.randint(0, self.mutation_rate+1) == 1:
                     self.wi[y][x] += random.uniform(-2.0, 2.0)
 
+    def mutate2(self):
         for y in range(len(self.wo)):
             for x in range(len(self.wo[y])):
-                if random.randint(0, rate+1) == 1:
+                if random.randint(0, self.mutation_rate+1) == 1:
                     self.wo[y][x] += random.uniform(-2.0, 2.0)
 
 

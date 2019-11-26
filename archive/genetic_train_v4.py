@@ -12,7 +12,6 @@ from game import Neural_Genetic
 from game import BasicAI
 import random
 
-POPULATION_SIZE = 8
 GAME_LENGTH = 100
 NUM_GENERATIONS = 100
 NUM_TOURNAMENTS = 8
@@ -21,7 +20,7 @@ GAME_SIZE = 16
 
 class Tournament:
     def __init__(self, population=None, pop_size=50, initial_game_length=20, game_length_step=5,
-                 max_game_length=1000, num_gen=100, training_ai=BasicAI.AfraidAI(), num_gen_before_ai_change=40):
+                 max_game_length=200, num_gen=100, training_ai=BasicAI.AfraidAI(), num_gen_before_ai_change=40):
         self.population = population
 
         if self.population is None:
@@ -35,6 +34,8 @@ class Tournament:
         self.num_gen = num_gen
         self.training_ai = training_ai
         self.num_gen_before_ai_change = num_gen_before_ai_change
+
+        self.mean_values = []
 
     def train(self):
         for epoch in range(self.num_gen):
@@ -97,6 +98,7 @@ class Tournament:
             values[i] = self.do_game(self.population[i], self.training_ai).get_score(1)
 
         print(mean(values))
+        self.mean_values.append(mean(values))
         self.population = [x for (y, x) in sorted(zip(values, self.population), key=lambda pair: pair[0], reverse=True)]
 
     def do_game(self, agent1, agent2):
@@ -113,6 +115,7 @@ class Tournament:
         return g
 
     def get_best(self):
+        print(self.mean_values)
         self.do_tournament()
 
         return self.population[0]
