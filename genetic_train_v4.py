@@ -20,8 +20,8 @@ GAME_SIZE = 16
 
 
 class Tournament:
-    def __init__(self, population=None, pop_size=50, initial_game_length=50, game_length_step=0,
-                 max_game_length=1000, num_gen=20, training_ai=BasicAI.ImmobileAI(), num_gen_before_ai_change=40):
+    def __init__(self, population=None, pop_size=50, initial_game_length=20, game_length_step=5,
+                 max_game_length=1000, num_gen=100, training_ai=BasicAI.AfraidAI(), num_gen_before_ai_change=40):
         self.population = population
 
         if self.population is None:
@@ -48,8 +48,8 @@ class Tournament:
             for i in range(len(self.population) // 5):
                 new_pop.extend(self.breed(self.population[i], self.population[i+1], epoch))
 
-            # To track temporary progress
-            pickle.dump(self.population[0], open("temp/best_nn_gen.p", "wb"))
+            # To track temporary progress, save best AI yet.
+            pickle.dump(self.population[0], open("temp/best_nn_gen_epoch" + str(epoch) + ".p", "wb"))
 
             while len(new_pop) < len(self.population):
                 new_pop.append(copy.deepcopy(self.population[
@@ -76,7 +76,8 @@ class Tournament:
     def do_tournament(self):
         values = [0 for i in range(len(self.population))]
 
-        for i in range(len(self.population)):
+        # Won't do a tournament bigger than 8
+        for i in range(min(8, len(self.population))):
             for j in range(i + 1, len(self.population)):
                 outcome = self.do_game(self.population[i], self.population[j]).get_winner()
 
@@ -120,16 +121,16 @@ class Tournament:
 def train_algorithm():
     tourneys = []
 
-    for i in range(1):
+    for i in range(8):
         print("Starting tournament: " + str(i + 1))
         tourneys.append(Tournament())
         tourneys[i].train()
         pickle.dump(tourneys[i].get_best(), open("ai2/best_nn_gen_" + str(i) + ".p", "wb"))
 
-    '''final_pop = [t.get_best() for t in tourneys]
+    final_pop = [t.get_best() for t in tourneys]
 
     last_tourney = Tournament(population=final_pop)
-    pickle.dump(last_tourney.get_best(), open("ai2/best_nn_gen.p", "wb"))'''
+    pickle.dump(last_tourney.get_best(), open("ai2/best_nn.p", "wb"))
 
 
 train_algorithm()

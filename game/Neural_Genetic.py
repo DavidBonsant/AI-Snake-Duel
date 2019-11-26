@@ -25,8 +25,8 @@ class NN:
         self.ao = [1.0] * self.number_output
         self.wi = [[0.0] * self.number_hidden for i in range(self.number_input)]
         self.wo = [[0.0] * self.number_output for j in range(self.number_hidden)]
-        randomize_matrix(self.wi, 0.0, 1.0)
-        randomize_matrix(self.wo, 0.0, 1.0)
+        randomize_matrix(self.wi, -2.0, 2.0)
+        randomize_matrix(self.wo, -2.0, 2.0)
 
     def run(self, inputs):
         if len(inputs) != self.number_input:
@@ -57,11 +57,21 @@ class NN:
     def mutate(self, other_nn, rate):
         for y in range(len(self.wi)):
             for x in range(len(self.wi[y])):
-                if random.randint(0, rate+2) == 1:
+                if random.randint(0, rate+1) == 1:
                     self.wi[y][x] = other_nn.wi[y][x]
+
+        for y in range(len(self.wo)):
+            for x in range(len(self.wo[y])):
+                if random.randint(0, rate+1) == 1:
+                    self.wo[y][x] = other_nn.wo[y][x]
 
     def mutate2(self, rate):
         for y in range(len(self.wi)):
             for x in range(len(self.wi[y])):
-                if random.randint(0, rate+2) == 1:
-                    self.wi[y][x] += random.uniform(0.0, 1.0)
+                if random.randint(0, rate+1) == 1:
+                    self.wi[y][x] += random.uniform(-2.0, 2.0)
+
+        for y in range(len(self.wo)):
+            for x in range(len(self.wo[y])):
+                if random.randint(0, rate+1) == 1:
+                    self.wo[y][x] += random.uniform(-2.0, 2.0)

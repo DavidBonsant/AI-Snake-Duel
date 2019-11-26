@@ -20,14 +20,14 @@ size = 16
 # Exemple de comment ouvrir un AI
 ai = pickle.load(open("temp/best_nn_gen.p", "rb"))
 
-test = Game.Game(size, size, Player.Player(0, 3, 3, size, size, decision_maker=BasicAI.ImmobileAI()),
+test = Game.Game(size, size, Player.Player(0, 3, 3, size, size, decision_maker=BasicAI.AfraidAI()),
                  Player.Player(1, size-3, size-3, size, size, decision_maker=ai))
 
 print("Game start!")
 g = GameRenderer(test)
 g.render(MAX_LENGTH)
 print("Winner: " + str(test.get_winner()))
-print(test.get_score(1))
+print(test.get_score(2))
 
 
 def run_game_without_gui():
