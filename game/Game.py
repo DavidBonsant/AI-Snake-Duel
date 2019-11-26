@@ -91,13 +91,6 @@ class Game:
             self.board[self.p1.x][self.p1.y].move(self.p1)
             self.board[self.p2.x][self.p2.y].move(self.p2)
 
-    # Les données sont données de la perspective du serpent
-    # Par défaut le serpent se dirige dans la direction [1, 0].
-    # Cette direction est la direction "à l'endroit"
-    # Toutes les valeurs de distance sont données %width, %height, elles sont donc positives
-    # Lorsque le serpent vas dans la direction [-1, 0], les valeurs sont inversés.
-    # Lorsque le serpent vas dans la direction [0, 1], x et y sont inversés
-
     def update_players(self, food_position):
         p1_forward = self.get_distance_to_next_wall(self.p1)
         p2_forward = self.get_distance_to_next_wall(self.p2)
@@ -114,8 +107,12 @@ class Game:
         def relativePos(player, x, y):
             mx = player.movement[0]
             my = player.movement[1]
-            return_x = ((x * mx + y * my) - player.x) % (self.w * mx ** 2 + self.h * my ** 2)
-            return_y = ((y * mx + x * my) - player.y) % (self.w * my ** 2 + self.h * mx ** 2)
+            # [1, 0]  x-px, y-py
+            # [-1, 0] px-x, py-y
+            # [0, 1]  y-py, px-x
+            # [0, -1] py-y, x-px
+            return_x = ((x - player.x) * mx + (y - player.y) * my) % (self.w * mx ** 2 + self.h * my ** 2)
+            return_y = ((y - player.y) * mx + (x - player.x) * my) % (self.w * my ** 2 + self.h * mx ** 2)
             return return_x, return_y 
 
         p1_food_x, p1_food_y = relativePos(self.p1, food_position[0], food_position[1])
