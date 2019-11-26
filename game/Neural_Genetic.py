@@ -9,6 +9,10 @@ def sigmoid(x):
     return math.tanh(x)
 
 
+def relu(x):
+    return max(0, x)
+
+
 def randomize_matrix(matrix, a, b):
     for i in range(len(matrix)):
         for j in range(len(matrix[0])):
@@ -75,3 +79,17 @@ class NN:
             for x in range(len(self.wo[y])):
                 if random.randint(0, rate+1) == 1:
                     self.wo[y][x] += random.uniform(-2.0, 2.0)
+
+
+class NN2(NN):
+    def run(self, inputs):
+        if len(inputs) != self.number_input:
+            print('incorrect number of inputs')
+        for i in range(self.number_input):
+            self.ai[i] = inputs[i]
+        for j in range(self.number_hidden):
+            self.ah[j] = relu(sum([self.ai[i] * self.wi[i][j] for i in range(self.number_input)]))
+        for k in range(self.number_output):
+            self.ao[k] = relu(sum([self.ah[j] * self.wo[j][k] for j in range(self.number_hidden)]))
+        return self.ao
+
