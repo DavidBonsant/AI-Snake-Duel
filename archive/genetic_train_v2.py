@@ -8,6 +8,7 @@ import pickle
 from game import Game
 from game import Player
 from game import Neural_Genetic
+from game import BasicAI
 
 POPULATION_SIZE = 8
 GAME_LENGTH = 100
@@ -18,7 +19,7 @@ GAME_SIZE = 16
 
 class Tournament:
     def __init__(self, population=None, pop_size=8, initial_game_length=10, game_length_step=10,
-                 max_game_length=1000, num_gen=100):
+                 max_game_length=1000, num_gen=30, training_ai=BasicAI.RandomAI(), num_gen_before_ai_change=20):
         self.population = population
 
         if self.population is None:
@@ -30,12 +31,18 @@ class Tournament:
         self.game_length_step = game_length_step
         self.max_game_length = max_game_length
         self.num_gen = num_gen
+        self.training_ai = training_ai
+        self.num_gen_before_ai_change = num_gen_before_ai_change
 
     def train(self):
         for epoch in range(self.num_gen):
-            print("epoch: " + str(epoch))
-
             self.do_tournament()
+
+            # Take the best AI for the next baseline for training
+            if epoch % self.num_gen_before_ai_change == 0:
+                self.training_ai = copy.deepcopy(self.population[0])
+
+            print("epoch: " + str(epoch))
 
             first0 = copy.deepcopy(self.population[0])
             first1 = copy.deepcopy(self.population[0])
@@ -58,21 +65,30 @@ class Tournament:
             if self.game_length < self.max_game_length:
                 self.game_length += self.game_length_step
 
-    # Every agent playes againts each other and are ordered by number of games won
+    # Every agent plays againts a certain algorithm
     # Agents play 2 times: Once as A, once as B
     def do_tournament(self):
         values = [0 for i in range(len(self.population))]
 
         for i in range(len(self.population)):
-            for j in range(0, len(self.population)):
-                if i != j:
-                    outcome = self.do_game(self.population[i], self.population[j])
+            outcome = self.do_game(self.population[i], self.training_ai)
 
-                    if outcome == 1:
-                        values[i] += 1
+            if outcome == 1:
+                values[i] += 1
 
-                    if outcome == 2:
-                        values[j] += 1
+            if outcome == 2:
+                values[i] -= 1
+
+        for i in range(len(self.population)):
+            outcome = self.do_game(self.training_ai, self.population[i])
+
+            if outcome == 2:
+                values[i] += 1
+
+            if outcome == 1:
+                values[i] -= 1
+
+        print(values)
 
         self.population = [x for (y, x) in sorted(zip(values, self.population), key=lambda pair: pair[0], reverse=True)]
 
@@ -102,12 +118,12 @@ def train_algorithm():
         print("Starting tournament: " + str(i + 1))
         tourneys.append(Tournament())
         tourneys[i].train()
-        pickle.dump(tourneys[i].get_best(), open("ai/best_nn_gen_" + str(i) + ".p", "wb"))
+        pickle.dump(tourneys[i].get_best(), open("ai2/best_nn_gen_" + str(i) + ".p", "wb"))
 
     final_pop = [t.get_best() for t in tourneys]
 
     last_tourney = Tournament(population=final_pop)
-    pickle.dump(last_tourney.get_best(), open("best_nn_gen.p", "wb"))
+    pickle.dump(last_tourney.get_best(), open("ai2/best_nn_gen.p", "wb"))
 
 
-train_algorithm()  # Note: Games are not long enough. Too many generations.
+train_algorithm()

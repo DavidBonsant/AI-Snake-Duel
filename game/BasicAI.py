@@ -4,7 +4,7 @@
 import random
 
 
-class BasicAI:
+class RandomAI:
     def __init__(self):
         pass
 
@@ -14,3 +14,40 @@ class BasicAI:
                               0, 0, 0, 0, 0, 0, 0, 0, 0,
                               0, 0, 0, 0, 0, 0, 0, 0, 0,
                               0, 0, 0, 0, 1])
+
+
+class CirlceAI:
+    def __init__(self):
+        self.order = [1, 0, 0, 0]
+        self.step = -1
+
+    # An AI that turns in circles
+    def update(self, forward=0, left=0, right=0, pomme_x=0, pomme_y=0, enemy_x=0, enemy_y=0):
+        self.step += 1
+        self.step %= len(self.order)
+
+        return self.order[self.step]
+
+
+class ImmobileAI:
+    def __init__(self):
+        pass
+
+    def update(self, forward=0, left=0, right=0, pomme_x=0, pomme_y=0, enemy_x=0, enemy_y=0):
+        # Toujours continuer tout droit
+        return 0
+
+
+class AfraidAI:
+    def __init__(self):
+        pass
+
+    # If there is a wall in front of me, I will avoid it
+    def update(self, forward=0, left=0, right=0, pomme_x=0, pomme_y=0, enemy_x=0, enemy_y=0):
+        if forward < 2:
+            if left > 1:
+                return -1
+            if right > 1:
+                return 1
+
+        return 0

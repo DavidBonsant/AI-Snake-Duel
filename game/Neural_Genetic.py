@@ -9,6 +9,10 @@ def sigmoid(x):
     return math.tanh(x)
 
 
+def relu(x):
+    return max(0, x)
+
+
 def randomize_matrix(matrix, a, b):
     for i in range(len(matrix)):
         for j in range(len(matrix[0])):
@@ -25,8 +29,10 @@ class NN:
         self.ao = [1.0] * self.number_output
         self.wi = [[0.0] * self.number_hidden for i in range(self.number_input)]
         self.wo = [[0.0] * self.number_output for j in range(self.number_hidden)]
-        randomize_matrix(self.wi, 0.0, 1.0)
-        randomize_matrix(self.wo, 0.0, 1.0)
+        randomize_matrix(self.wi, -2.0, 2.0)
+        randomize_matrix(self.wo, -2.0, 2.0)
+
+        self.mutation_rate = 2
 
     def run(self, inputs):
         if len(inputs) != self.number_input:
@@ -54,14 +60,42 @@ class NN:
 
         return 1
 
-    def mutate(self, other_nn):
+    def cross(self, other_nn, rate):
         for y in range(len(self.wi)):
             for x in range(len(self.wi[y])):
-                if random.randint(0, 1) == 1:
+                if random.randint(0, rate+1) == 1:
                     self.wi[y][x] = other_nn.wi[y][x]
 
-    def mutate2(self):
+        for y in range(len(self.wo)):
+            for x in range(len(self.wo[y])):
+                if random.randint(0, rate+1) == 1:
+                    self.wo[y][x] = other_nn.wo[y][x]
+
+    def set_mutation_rate(self, rate):
+        self.mutation_rate = rate
+
+    def mutate1(self):
         for y in range(len(self.wi)):
             for x in range(len(self.wi[y])):
-                if random.randint(0, 1) == 1:
-                    self.wi[y][x] += random.uniform(0.0, 1.0)
+                if random.randint(0, self.mutation_rate+1) == 1:
+                    self.wi[y][x] += random.uniform(-2.0, 2.0)
+
+    def mutate2(self):
+        for y in range(len(self.wo)):
+            for x in range(len(self.wo[y])):
+                if random.randint(0, self.mutation_rate+1) == 1:
+                    self.wo[y][x] += random.uniform(-2.0, 2.0)
+
+
+class NN2(NN):
+    def run(self, inputs):
+        if len(inputs) != self.number_input:
+            print('incorrect number of inputs')
+        for i in range(self.number_input):
+            self.ai[i] = inputs[i]
+        for j in range(self.number_hidden):
+            self.ah[j] = relu(sum([self.ai[i] * self.wi[i][j] for i in range(self.number_input)]))
+        for k in range(self.number_output):
+            self.ao[k] = relu(sum([self.ah[j] * self.wo[j][k] for j in range(self.number_hidden)]))
+        return self.ao
+

@@ -1,12 +1,13 @@
 # AI-Snake-Duel
 # David Bonsant
 # Jérémie Beaudoin-Dion
-
+import pickle
 import time
 import sys
 
 from game import Game
 from game import Player
+from game import BasicAI
 
 from ai_gui import GameRenderer
 
@@ -15,12 +16,18 @@ from ai_gui import GameRenderer
 MAX_LENGTH = 100
 # Créer la partie
 size = 16
-test = Game.Game(size, size, Player.Player(0, 3, 3, size, size), Player.Player(1, 11, 11, size, size))
+
+# Exemple de comment ouvrir un AI
+ai = pickle.load(open("temp2/best_nn_gen_epoch63.p", "rb"))
+
+test = Game.Game(size, size, Player.Player(0, 3, 3, size, size, decision_maker=BasicAI.RandomAI()),
+                 Player.Player(1, size-3, size-3, size, size, decision_maker=ai))
 
 print("Game start!")
 g = GameRenderer(test)
 g.render(MAX_LENGTH)
 print("Winner: " + str(test.get_winner()))
+print(test.get_score(2))
 
 
 def run_game_without_gui():
@@ -41,5 +48,3 @@ def run_game_without_gui():
             sys.stdout.flush()
             time.sleep(0.1)
 
-# Exemple de comment ouvrir un AI
-# ai = pickle.load(open("ai/AI_NAME.p", "rb"))

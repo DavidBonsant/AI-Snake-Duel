@@ -105,11 +105,14 @@ class Decision_Tree:
         n2 = random.choice(other.root.getNodes())
         n1.swap(random.choice(n1.children), random.choice(n2.children), n2)
 
-    def mutateWeights(self):
+    def set_mutation_rate(self, rate):
+        pass  # The mutation rate does not change for the Decision_Tree_Genetic
+
+    def mutate1(self):
         self.root.adjust(recursive=True)
         return self
 
-    def mutateStructure(self):
+    def mutate2(self):
         n = random.choice(self.root.getNodes())
         n.remove(random.choice(n.children))
 
