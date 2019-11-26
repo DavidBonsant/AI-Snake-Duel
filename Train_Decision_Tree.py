@@ -49,12 +49,12 @@ class Tournament:
                     newGeneration[-1].cross(newGeneration[-2])
             # Mutations de poids
             for i in range(len(self.population)//4):
-                newGeneration.append(copy.deepcopy(self.population[i]).mutateWeights())
+                newGeneration.append(copy.deepcopy(self.population[i]).mutate1())
             # Mutations de structure
             i=0
             while len(newGeneration) < len(self.population) - 1:
                 i-=-1
-                newGeneration.append(copy.deepcopy(self.population[i]).mutateStructure())
+                newGeneration.append(copy.deepcopy(self.population[i]).mutate2())
             # Un aléatoire juste au cas
             newGeneration.append(Decision_Tree_Genetic.Decision_Tree())
 
