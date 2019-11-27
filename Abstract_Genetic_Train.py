@@ -111,7 +111,7 @@ class Tournament:
 
         return [main_agent, first, second, third]
 
-    # Every agent playes againts each other and are ordered by number of games won
+    # Every agent plays againts each other and are ordered by number of games won
     def do_tournament(self):
         values = [0 for i in range(len(self.population))]
 
@@ -166,17 +166,17 @@ class Tournament:
 def train_algorithm(algorithm):
     tourneys = []
 
-    for i in range(8):
+    for i in range(1):
         print("Starting tournament: " + str(i + 1))
         tourneys.append(Tournament(algorithm, pop_size=50, initial_game_length=20, game_length_step=5,
                                    max_game_length=200, num_gen=100, scoring_system=ScoringSystem))
         tourneys[i].train()
         pickle.dump(tourneys[i].get_best(), open(str(algorithm.__name__) + "/best_gen_tourney_" + str(i) + ".p", "wb"))
 
-    final_pop = [t.get_best() for t in tourneys]
+    # final_pop = [t.get_best() for t in tourneys]
 
-    last_tourney = Tournament(algorithm, population=final_pop)
-    pickle.dump(last_tourney.get_best(), open(str(algorithm.__name__) + "/best.p", "wb"))
+    # last_tourney = Tournament(algorithm, population=final_pop)
+    # pickle.dump(last_tourney.get_best(), open(str(algorithm.__name__) + "/best.p", "wb"))
 
 
 train_algorithm(Neural_Genetic.NN)

@@ -105,7 +105,7 @@ class Decision_Tree:
         n2 = random.choice(other.root.getNodes())
         n1.swap(random.choice(n1.children), random.choice(n2.children), n2)
 
-    def set_mutation_rate(self, rate):
+    def set_mutate_rate(self, rate):
         pass  # The mutation rate does not change for the Decision_Tree_Genetic
 
     def mutate1(self):

@@ -71,7 +71,7 @@ class NN:
                 if random.randint(0, rate+1) == 1:
                     self.wo[y][x] = other_nn.wo[y][x]
 
-    def set_mutation_rate(self, rate):
+    def set_mutate_rate(self, rate):
         self.mutation_rate = rate
 
     def mutate1(self):
