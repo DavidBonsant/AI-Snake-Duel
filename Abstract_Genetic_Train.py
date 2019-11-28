@@ -7,7 +7,7 @@ import copy
 import pickle
 from statistics import mean
 
-from game import Game
+from game import Game, Decision_Tree_Genetic
 from game import Player
 from game import Neural_Genetic
 from game import BasicAI
@@ -66,7 +66,7 @@ class Tournament:
         self.max_game_length = max_game_length
         self.num_gen = num_gen
 
-        self.all_training_ai = [BasicAI.AfraidAI(), BasicAI.RandomAI(), BasicAI.ImmobileAI(), BasicAI.CirlceAI()]
+        self.all_training_ai = [BasicAI.AfraidAI(), BasicAI.RandomAI(), BasicAI.ImmobileAI(), BasicAI.AgressiveAI()]
 
         self.mean_values = []
         self.scoring_system = scoring_system
@@ -179,4 +179,4 @@ def train_algorithm(algorithm):
     # pickle.dump(last_tourney.get_best(), open(str(algorithm.__name__) + "/best.p", "wb"))
 
 
-train_algorithm(Neural_Genetic.NN)
+train_algorithm(Decision_Tree_Genetic.Decision_Tree)

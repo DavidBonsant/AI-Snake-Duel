@@ -60,15 +60,15 @@ class NN:
 
         return 1
 
-    def cross(self, other_nn, rate):
+    def cross(self, other_nn):
         for y in range(len(self.wi)):
             for x in range(len(self.wi[y])):
-                if random.randint(0, rate+1) == 1:
+                if random.randint(0, self.mutation_rate+1) == 1:
                     self.wi[y][x] = other_nn.wi[y][x]
 
         for y in range(len(self.wo)):
             for x in range(len(self.wo[y])):
-                if random.randint(0, rate+1) == 1:
+                if random.randint(0, self.mutation_rate+1) == 1:
                     self.wo[y][x] = other_nn.wo[y][x]
 
     def set_mutate_rate(self, rate):
