@@ -46,7 +46,7 @@ class ScoringSystem:
         # wins 20 points per apple collected
         self.score += (player.age - 5) * self.points_collect_apple
 
-        # Looses 50 points if the player lost.
+        # Wins 50 points if the player won.
         if won:
             self.score += self.points_win
 
