@@ -66,7 +66,7 @@ class Tournament:
         self.max_game_length = max_game_length
         self.num_gen = num_gen
 
-        self.all_training_ai = [BasicAI.AfraidAI(), BasicAI.RandomAI(), BasicAI.ImmobileAI(), BasicAI.AgressiveAI()]
+        self.all_training_ai = [BasicAI.AfraidAI(), BasicAI.RandomAI(), BasicAI.ImmobileAI()]
 
         self.mean_values = []
         self.scoring_system = scoring_system
@@ -99,9 +99,12 @@ class Tournament:
         first = copy.deepcopy(main_agent)
         second = copy.deepcopy(main_agent)
         third = copy.deepcopy(main_agent)
+        fourth = copy.deepcopy(second_agent)
 
         first.set_mutate_rate(epoch//2)
         first.cross(second_agent)
+
+        fourth.cross(main_agent)
 
         second.set_mutate_rate(epoch//2)
         second.mutate1()
@@ -109,7 +112,7 @@ class Tournament:
         third.set_mutate_rate(epoch//2)
         third.mutate2()
 
-        return [main_agent, first, second, third]
+        return [first, second, third, fourth]
 
     # Every agent plays againts each other and are ordered by number of games won
     def do_tournament(self):

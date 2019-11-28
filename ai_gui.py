@@ -21,7 +21,7 @@ class GameRenderer:
 
     def render(self, max_length):
         # Create the Window
-        window = SimpleGui.Window('Snake Battle', self.layout)
+        window = SimpleGui.Window('Snake pour Python', self.layout)
         # Event Loop to process "events" and get the "values" of the inputs
         window.Read()
 
@@ -37,6 +37,6 @@ class GameRenderer:
                     window[str(x * 100) + str(y)].update('█', text_color=cell)
 
             window.Refresh()
-            time.sleep(0.1)
+            # time.sleep(0.2)
 
         window.close()

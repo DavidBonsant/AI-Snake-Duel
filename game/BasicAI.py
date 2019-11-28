@@ -16,19 +16,6 @@ class RandomAI:
                               0, 0, 0, 0, 1])
 
 
-class CirlceAI:
-    def __init__(self):
-        self.order = [1, 0, 0, 0]
-        self.step = -1
-
-    # An AI that turns in circles
-    def update(self, forward=0, left=0, right=0, pomme_x=0, pomme_y=0, enemy_x=0, enemy_y=0):
-        self.step += 1
-        self.step %= len(self.order)
-
-        return self.order[self.step]
-
-
 class ImmobileAI:
     def __init__(self):
         pass
