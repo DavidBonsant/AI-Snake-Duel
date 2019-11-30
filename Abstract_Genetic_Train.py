@@ -2,7 +2,7 @@
 # AI-Snake-Duel
 # David Bonsant
 # Jérémie Beaudoin-Dion
-
+from threading import Thread
 import copy
 import pickle
 from statistics import mean
@@ -70,6 +70,7 @@ class Tournament:
 
         self.mean_values = []
         self.scoring_system = scoring_system
+        self.algorithm_class = agent_class
 
     def train(self):
         for epoch in range(self.num_gen):
@@ -84,7 +85,8 @@ class Tournament:
 
             # To track temporary progress, save best AI yet every 20 epoch
             if epoch % 20 == 0:
-                pickle.dump(self.population[0], open("temp/best_nn_gen_epoch" + str(epoch) + ".p", "wb"))
+                pickle.dump(self.population[0], open("temp/" +
+                    str(self.algorithm_class.__name__) + "_best_gen_epoch" + str(epoch) + ".p", "wb"))
 
             while len(new_pop) < len(self.population):
                 new_pop.append(copy.deepcopy(self.population[
@@ -101,15 +103,15 @@ class Tournament:
         third = copy.deepcopy(main_agent)
         fourth = copy.deepcopy(second_agent)
 
-        first.set_mutate_rate(epoch//2)
+        first.set_mutate_rate(epoch)
         first.cross(second_agent)
 
         fourth.cross(main_agent)
 
-        second.set_mutate_rate(epoch//2)
+        second.set_mutate_rate(epoch)
         second.mutate1()
 
-        third.set_mutate_rate(epoch//2)
+        third.set_mutate_rate(epoch)
         third.mutate2()
 
         return [first, second, third, fourth]
@@ -135,14 +137,23 @@ class Tournament:
     # Train agents to get a good score for the game
     def do_train_to_get_apple(self):
         values = [0 for i in range(len(self.population))]
+        threads = [None for i in range(len(self.population))]
 
         for i in range(len(self.population)):
-            for ai in self.all_training_ai:
-                values[i] += self.do_game(self.population[i], ai).get_score(player_num=1)
+            threads[i] = Thread(target=self.do_game_against_all_ai, args=(self.population[i], values, i))
+            threads[i].start()
 
-        print(mean(values))
-        self.mean_values.append(mean(values))
+        for i in range(len(threads)):
+            threads[i].join()
+
+        mean_of_values = mean(values)
+        print(mean_of_values)
+        self.mean_values.append(mean_of_values)
         self.population = [x for (y, x) in sorted(zip(values, self.population), key=lambda pair: pair[0], reverse=True)]
+
+    def do_game_against_all_ai(self, agent1, values, index):
+        for ai in self.all_training_ai:
+            values[index] += self.do_game(agent1, ai).get_score(player_num=1)
 
     def do_game(self, agent1, agent2):
         g = Game.Game(GAME_SIZE, GAME_SIZE,
@@ -172,9 +183,9 @@ def train_algorithm(algorithm):
     for i in range(1):
         print("Starting tournament: " + str(i + 1))
         tourneys.append(Tournament(algorithm, pop_size=50, initial_game_length=20, game_length_step=5,
-                                   max_game_length=200, num_gen=100, scoring_system=ScoringSystem))
+                                   max_game_length=150, num_gen=500, scoring_system=ScoringSystem))
         tourneys[i].train()
-        pickle.dump(tourneys[i].get_best(), open(str(algorithm.__name__) + "/best_gen_tourney_" + str(i) + ".p", "wb"))
+        pickle.dump(tourneys[i].get_best(), open("ai2/" + str(algorithm.__name__) + "best_gen_tourney_" + str(i) + ".p", "wb"))
 
     # final_pop = [t.get_best() for t in tourneys]
 
@@ -182,4 +193,4 @@ def train_algorithm(algorithm):
     # pickle.dump(last_tourney.get_best(), open(str(algorithm.__name__) + "/best.p", "wb"))
 
 
-train_algorithm(Decision_Tree_Genetic.Decision_Tree)
+train_algorithm(Neural_Genetic.NN)
