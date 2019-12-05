@@ -83,8 +83,8 @@ class Tournament:
 
             # To track temporary progress, save best AI asynchronously every 20 epoch
             if epoch % 20 == 0:
-                Thread(target=pickle.dump, args=(self.population[0], open("temp/" +
-                    str(self.algorithm_class.__name__) + "_best_gen_epoch" + str(epoch) + ".p", "wb")))
+                pickle.dump(self.population[0], open("temp/" +
+                    str(self.algorithm_class.__name__) + "_best_gen_epoch" + str(epoch) + ".p", "wb"))
 
             new_pop = []
             # Take the best and put him as opponent for next generation
