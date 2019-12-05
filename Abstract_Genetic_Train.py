@@ -5,6 +5,7 @@
 from threading import Thread
 import copy
 import pickle
+import sys
 from statistics import mean
 
 from game import Game, Decision_Tree_Genetic
@@ -19,6 +20,7 @@ NUM_GENERATIONS = 100
 NUM_TOURNAMENTS = 8
 GAME_SIZE = 16
 
+Algorithm = True #True for Decision Tree and False for NN
 
 class ScoringSystem:
     def __init__(self, points_forward_apple=1, points_backwards_apple=-3, points_collect_apple=20, points_win=50):
@@ -75,28 +77,40 @@ class Tournament:
     def train(self):
         for epoch in range(self.num_gen):
             print("epoch: " + str(epoch))
+            sys.stdout.flush()
 
             self.do_train_to_get_apple()
 
-            new_pop = []
-
-            for i in range(len(self.population) // 5):
-                new_pop.extend(self.breed(self.population[i], self.population[i+1], epoch))
-
-            # To track temporary progress, save best AI yet every 20 epoch
+            # To track temporary progress, save best AI asynchronously every 20 epoch
             if epoch % 20 == 0:
-                pickle.dump(self.population[0], open("temp/" +
-                    str(self.algorithm_class.__name__) + "_best_gen_epoch" + str(epoch) + ".p", "wb"))
+                Thread(target=pickle.dump, args=(self.population[0], open("temp/" +
+                    str(self.algorithm_class.__name__) + "_best_gen_epoch" + str(epoch) + ".p", "wb")))
 
-            while len(new_pop) < len(self.population):
-                new_pop.append(copy.deepcopy(self.population[
-                                                 random.randint(len(self.population) // 5 + 1, len(self.population)-1)]))
+            new_pop = []
+            # Take the best and put him as opponent for next generation
+            self.all_training_ai = self.population[:1]
+
+            # The top 20% gets to live
+            for i in range(len(self.population) // 5):
+                new_pop.append(copy.deepcopy(self.population[i]))
+                new_pop.append(copy.deepcopy(self.population[i]))
+                new_pop.append(copy.deepcopy(self.population[i]))
+                new_pop[-2].mutate1()
+                new_pop[-1].mutate2()
+                #new_pop.extend(self.breed(self.population[i], self.population[i+1], epoch))
+            
+            pop = len(self.population)
+            while len(new_pop) < pop:
+                new_pop.append(copy.deepcopy(self.population[0]))
+                new_pop.append(copy.deepcopy(self.population[1]))
+                new_pop[-2].cross(new_pop[-1])
 
             self.population = new_pop
 
             if self.game_length < self.max_game_length:
                 self.game_length += self.game_length_step
 
+    """
     def breed(self, main_agent, second_agent, epoch):
         first = copy.deepcopy(main_agent)
         second = copy.deepcopy(main_agent)
@@ -115,6 +129,7 @@ class Tournament:
         third.mutate2()
 
         return [first, second, third, fourth]
+    """
 
     # Every agent plays againts each other and are ordered by number of games won
     def do_tournament(self):
@@ -192,5 +207,7 @@ def train_algorithm(algorithm):
     # last_tourney = Tournament(algorithm, population=final_pop)
     # pickle.dump(last_tourney.get_best(), open(str(algorithm.__name__) + "/best.p", "wb"))
 
-
-train_algorithm(Neural_Genetic.NN)
+if Algorithm:
+    train_algorithm(Decision_Tree_Genetic.Decision_Tree)
+else:
+    train_algorithm(Neural_Genetic.NN)

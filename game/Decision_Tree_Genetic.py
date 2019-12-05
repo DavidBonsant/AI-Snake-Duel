@@ -83,6 +83,21 @@ class Decision_Tree:
                     nodes.extend(child.getNodes())
             return nodes
 
+        # Éliminer la redondance dans notre arbre
+        def prune(self, variables=[]):
+            if self.index in variables:
+                return True
+            for child in self.children:
+                if isinstance(child, Decision_Tree.Node):
+                    v = variables[:]
+                    v.append(self.index)
+                    if child.prune(v):
+                        self.remove(child)
+                        if len(self.children) == 0:
+                            self.add(random.randrange(-1, 2))
+
+            return False
+
     def __init__(self):
         self.root = self.Node(0, 0)
         nodes = []
@@ -104,6 +119,8 @@ class Decision_Tree:
         n1 = random.choice(self.root.getNodes())
         n2 = random.choice(other.root.getNodes())
         n1.swap(random.choice(n1.children), random.choice(n2.children), n2)
+        self.root.prune()
+        other.root.prune()
 
     def set_mutate_rate(self, rate):
         pass  # The mutation rate does not change for the Decision_Tree_Genetic
@@ -123,4 +140,5 @@ class Decision_Tree:
             new_node = self.Node(i, random.randrange(-1, 2))
             new_node.add(random.randrange(-1, 2))
         n.add(new_node)
+        self.root.prune()
         return self
