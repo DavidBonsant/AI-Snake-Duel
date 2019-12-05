@@ -183,7 +183,7 @@ def train_algorithm(algorithm):
     for i in range(1):
         print("Starting tournament: " + str(i + 1))
         tourneys.append(Tournament(algorithm, pop_size=50, initial_game_length=20, game_length_step=5,
-                                   max_game_length=150, num_gen=500, scoring_system=ScoringSystem))
+                                   max_game_length=150, num_gen=300, scoring_system=ScoringSystem))
         tourneys[i].train()
         pickle.dump(tourneys[i].get_best(), open("ai2/" + str(algorithm.__name__) + "best_gen_tourney_" + str(i) + ".p", "wb"))
 
@@ -193,4 +193,5 @@ def train_algorithm(algorithm):
     # pickle.dump(last_tourney.get_best(), open(str(algorithm.__name__) + "/best.p", "wb"))
 
 
+# Tahn-1
 train_algorithm(Neural_Genetic.NN)

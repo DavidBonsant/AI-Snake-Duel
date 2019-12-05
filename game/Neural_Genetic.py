@@ -20,7 +20,7 @@ def randomize_matrix(matrix, a, b):
 
 
 class NN:
-    def __init__(self, number_hidden=10):
+    def __init__(self, number_hidden=1):
         self.number_input = 7
         self.number_hidden = number_hidden
         self.number_output = 3
@@ -63,31 +63,34 @@ class NN:
     def cross(self, other_nn):
         for y in range(len(self.wi)):
             for x in range(len(self.wi[y])):
-                if random.randint(0, self.mutation_rate+1) == 1:
+                if random.randint(0, self.mutation_rate) == 0:
                     self.wi[y][x] = other_nn.wi[y][x]
 
         for y in range(len(self.wo)):
             for x in range(len(self.wo[y])):
-                if random.randint(0, self.mutation_rate+1) == 1:
+                if random.randint(0, self.mutation_rate) == 0:
                     self.wo[y][x] = other_nn.wo[y][x]
 
-    def set_mutate_rate(self, rate):
-        self.mutation_rate = rate
+    def set_mutate_rate(self, epoch):
+        self.mutation_rate = (epoch+1) // 10
 
     def mutate1(self):
         for y in range(len(self.wi)):
             for x in range(len(self.wi[y])):
-                if random.randint(0, self.mutation_rate+1) == 1:
+                if random.randint(0, self.mutation_rate) == 0:
                     self.wi[y][x] += random.uniform(-2.0, 2.0)
 
     def mutate2(self):
         for y in range(len(self.wo)):
             for x in range(len(self.wo[y])):
-                if random.randint(0, self.mutation_rate+1) == 1:
+                if random.randint(0, self.mutation_rate) == 0:
                     self.wo[y][x] += random.uniform(-2.0, 2.0)
 
 
 class NN2(NN):
+    def __init__(self):
+        super().__init__(number_hidden=10)
+
     def run(self, inputs):
         if len(inputs) != self.number_input:
             print('incorrect number of inputs')

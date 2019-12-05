@@ -18,7 +18,8 @@ MAX_LENGTH = 100
 size = 16
 
 # Exemple de comment ouvrir un AI
-ai = pickle.load(open("ai/best_dt_gen_epoch40.p", "rb"))
+ai = pickle.load(open("temp/NN_best_gen_epoch100.p", "rb"))
+ai1 = pickle.load(open("ai/NN_Tahn_best_gen_epoch120.p", "rb"))
 
 test = Game.Game(size, size, Player.Player(0, 3, 3, size, size, decision_maker=BasicAI.RandomAI()),
                  Player.Player(1, size-3, size-3, size, size, decision_maker=ai))
