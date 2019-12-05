@@ -8,7 +8,7 @@ ATTRIBUTES = ["forward", "left", "right", "pomme_x", "pomme_y", "enemy_x", "enem
 
 def print_tree(node, indent=" "):
     if isinstance(node, int):
-        print(indent[:-1]+'|-(', node, ')')
+        print(indent[:-1]+ '|-(', node, ')')
     else:
         print(indent[:-1]+'|-', ATTRIBUTES[node.index])
         for child in node.children:
@@ -19,4 +19,4 @@ def print_tree(node, indent=" "):
                 nextIndent = nextIndent+"|"
             print_tree(child, nextIndent)
 
-print_tree(pickle.load(open("temp/Decision_Tree_best_gen_epoch120.p", "rb")).root)
+print_tree(pickle.load(open("temp/Decision_Tree_best_gen_epoch20.p", "rb")).root)
