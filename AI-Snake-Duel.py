@@ -20,7 +20,7 @@ size = 16
 cmd = True
 
 # Exemple de comment ouvrir un AI
-ai = pickle.load(open("temp/Decision_Tree_best_gen_epoch40.p", "rb"))
+ai = pickle.load(open("temp/Decision_Tree_best_gen_epoch160.p", "rb"))
 
 test = Game.Game(size, size, Player.Player(0, 3, 3, size, size, decision_maker=BasicAI.RandomAI()),
                  Player.Player(1, size-3, size-3, size, size, decision_maker=ai))

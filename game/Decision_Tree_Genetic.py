@@ -87,15 +87,22 @@ class Decision_Tree:
         def prune(self, variables=[]):
             if self.index in variables:
                 return True
+            v = variables[:]
+            v.append(self.index)
             for child in self.children:
                 if isinstance(child, Decision_Tree.Node):
-                    v = variables[:]
-                    v.append(self.index)
+                    while len(child.children) == 1:
+                        grandchild = child.children[0]
+                        self.swap(child, grandchild, child)
+                        child = grandchild
+                        if isinstance(child, int):
+                            return False
                     if child.prune(v):
+                        # Give the node's children to the parent and remove it.
+                        for grandchild in child.children:
+                            self.add(grandchild)
                         self.remove(child)
-                        if len(self.children) == 0:
-                            self.add(random.randrange(-1, 2))
-
+                        self.adjust()
             return False
 
     def __init__(self):
@@ -119,6 +126,8 @@ class Decision_Tree:
         n1 = random.choice(self.root.getNodes())
         n2 = random.choice(other.root.getNodes())
         n1.swap(random.choice(n1.children), random.choice(n2.children), n2)
+        n1.adjust()
+        n2.adjust()
         self.root.prune()
         other.root.prune()
 
@@ -130,15 +139,19 @@ class Decision_Tree:
         return self
 
     def mutate2(self):
-        n = random.choice(self.root.getNodes())
-        n.remove(random.choice(n.children))
+        # Sometimes, deletete a random node
+        if random.randrange(0, 5) == 0:
+            n = random.choice(self.root.getNodes())
+            n.remove(random.choice(n.children))
 
+        # Create a new node
         n = random.choice(self.root.getNodes())
         new_node = random.randrange(-1, 2)
         i = random.randrange(0, 7)
         if i != n.index:
-            new_node = self.Node(i, random.randrange(-1, 2))
-            new_node.add(random.randrange(-1, 2))
+            new_node = self.Node(i, 0)
+            new_node.add(-1)
+            new_node.add(1)
         n.add(new_node)
         self.root.prune()
         return self

@@ -162,7 +162,7 @@ class Tournament:
             threads[i].join()
 
         mean_of_values = mean(values)
-        print(mean_of_values)
+        print(mean_of_values, max(values))
         self.mean_values.append(mean_of_values)
         self.population = [x for (y, x) in sorted(zip(values, self.population), key=lambda pair: pair[0], reverse=True)]
 
