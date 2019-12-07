@@ -20,10 +20,11 @@ size = 16
 cmd = True
 
 # Exemple de comment ouvrir un AI
-ai = pickle.load(open("temp/Decision_Tree_best_gen_epoch160.p", "rb"))
+ai1 = pickle.load(open("ai/Arbre de décision/Decision_Tree_best_gen_epoch280.p", "rb"))
+ai2 = pickle.load(open("ai/NN2_best_gen_epoch180.p", "rb"))
 
-test = Game.Game(size, size, Player.Player(0, 3, 3, size, size, decision_maker=BasicAI.RandomAI()),
-                 Player.Player(1, size-3, size-3, size, size, decision_maker=ai))
+test = Game.Game(size, size, Player.Player(0, 3, 3, size, size, decision_maker=ai1),
+                 Player.Player(1, size-3, size-3, size, size, decision_maker=ai2))
 
 def run_game_without_gui():
     for i in range(MAX_LENGTH):

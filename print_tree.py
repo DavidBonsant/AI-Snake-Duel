@@ -19,4 +19,4 @@ def print_tree(node, indent=" "):
                 nextIndent = nextIndent+"|"
             print_tree(child, nextIndent)
 
-print_tree(pickle.load(open("temp/Decision_Tree_best_gen_epoch20.p", "rb")).root)
+print_tree(pickle.load(open("ai/Arbre de décision/Decision_Tree_best_gen_epoch200.p", "rb")).root)
